@@ -118,7 +118,7 @@ Key entries in `configs/*.yaml` (see `docs/PROTOCOL.md` §3 for selection):
 
 ## Contact
 
-Corresponding author: <email@example.com> (placeholder)
+Corresponding author: <ts_1993@126.com> (placeholder)
 
 ## License
 
