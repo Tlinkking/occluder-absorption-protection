@@ -1,0 +1,38 @@
+# TUMTraf-I configuration (test segment: frames 931-1033 of sequence s03 south)
+# Paths are relative to this file's directory unless absolute. Edit data_path
+# and masks_path after downloading the dataset and building the proxy masks
+# (see README "Data preparation").
+
+dataset: tumtraf
+
+paths:
+  data_path: /path/to/tumtraf_i/gmm_split_s03   # TUMTraf-I sequence s03 (download required)
+  masks_path: /path/to/proxy_masks              # frame_*.npz built by scripts/prepare/
+  initial_gmm: models/tumtraf_initial_gmm.npz   # relative to package root
+  background_reference: models/tumtraf_background_reference.npz  # voxel background
+                                                  # reference for the V-proxy;
+                                                  # rebuild with prepare/build_background_reference.py
+  repo_path: /path/to/roadside-lidar-background-subtraction  # external dependency
+
+grid:
+  vert: 64            # vertical beams (rings)
+  horiz: 2048         # horizontal bins over 360 deg
+  sigma_floor: 0.001  # sigma_min: numerical floor for beam sigma
+
+model_selection:      # background-component selection from the 3-component beam GMM
+  min_weight_bg: 0.1  # repo methods/gmm.yaml inference section
+  sigma_max_bg: 0.58
+
+split:
+  val: [827, 930]     # 104 frames, parameter selection only
+  test: [931, 1033]   # 103 frames, reported results
+
+params:               # Ours (A2) test configuration, selected on val only
+  alpha: 0.05         # learning rate of the beam-wise moment update
+  eta: 0.7            # update gate threshold on q_V
+  wV: 2.0             # weight of g in ell_V
+  wO: 0.5             # weight of g in ell_O
+  beta: 10.0          # weight of the censoring term log S_B in ell_O
+  bM: -2.0            # constant bias of the M (missing) state
+  sigma_r: 0.05       # sensor range noise (m)
+  c: 6.0              # Hard-gate (B2) threshold only; unused by Ours

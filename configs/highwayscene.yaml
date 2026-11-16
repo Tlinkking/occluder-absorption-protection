@@ -1,0 +1,35 @@
+# HighwayScene configuration (official test split: 998 frames, ids 5001-5998,
+# heavy_traffic sequence, Ouster OS0 sensor)
+# Edit data_path after downloading the dataset (see README "Data preparation").
+
+dataset: highwayscene
+sensor: ouster
+
+paths:
+  data_path: /path/to/HighwayScene             # dataset root containing test/
+  initial_gmm: models/highwayscene_initial_gmm.npz  # relative to package root
+  repo_path: /path/to/roadside-lidar-background-subtraction  # external dependency
+  gt_config: configs/ground_truth/highwayscene.yaml  # lane-OBB definitions, inside the external repo
+
+grid:
+  vert: 128           # Ouster OS0 channels
+  horiz: 1024         # horizontal bins over 360 deg
+  sigma_floor: 0.001
+
+model_selection:      # background-component selection (repo ouster gmm.yaml)
+  min_weight_bg: 0.36
+  sigma_max_bg: 0.22
+
+split:
+  test: [5001, 5998]  # official test split; the repo run.yaml defines the val split
+  max_range: 100.0    # r <= 100 m crop, same as the repo baseline preprocessing
+
+params:               # Ours (A2) test configuration, selected on val only
+  alpha: 0.05
+  eta: 0.5
+  wV: 2.0
+  wO: 0.5
+  beta: 0.1
+  bM: -2.0
+  sigma_r: 0.05
+  c: 6.0              # Hard-gate (B2) threshold only; unused by Ours
